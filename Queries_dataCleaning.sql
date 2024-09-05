@@ -3,9 +3,15 @@
 
 CREATE DATABASE world_layoffs;
 
+-- or create database using  create a new schema 
+
+-- import the table from device
+
 SELECT * 
 FROM layoffs;
 
+
+--  standard process of data cleaning we can modify it accoding to our requirements  
 # 1. Remove Duplicates
 # 2. Standardize the data
 # 3. Null values or blank values
@@ -32,6 +38,7 @@ ROW_NUMBER() OVER(
 PARTITION BY company , location , industry , total_laid_off , percentage_laid_off  , `date` , stage ,
 country  , funds_raised_millions) as row_num
 FROM layoffs_staging; 
+
 
 WITH cte1 AS # Making a common table expression
 (
@@ -106,8 +113,8 @@ SELECT * FROM layoffs_staging2;
 SELECT company , TRIM(company)
 FROM layoffs_staging2;
 
-UPDATE layoffs_staging2 SET
-company = TRIM(company); 
+UPDATE layoffs_staging2 
+SET company = TRIM(company); 
 
 
 # Checking industry and given same name to the industry of same type
@@ -147,7 +154,7 @@ WHERE country LIKE 'United Stated%';
 # Standardize date column to date datatype
 
 SELECT `date` ,
-STR_TO_DATE(`date`  , '%m/%d/%Y') as datea
+STR_TO_DATE(`date`  , '%m/%d/%Y') as date
 FROM layoffs_staging2;
 
 UPDATE layoffs_staging2
@@ -157,6 +164,9 @@ SELECT `date`
 FROM layoffs_staging2;
 
 #Now change it to a date column ( datatype )
+
+-- doing this after making the date in suitable format
+
 ALTER TABLE layoffs_staging2
 MODIFY `date` DATE; #Changing datatype to DATE
 
